@@ -157,6 +157,96 @@ impl DomainContext {
     }
 }
 
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct SkillContext {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub related_rules: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub used_by_agents: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub applicable_modules: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub constraints: Vec<String>,
+}
+
+impl SkillContext {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_related_rules(mut self, rules: Vec<String>) -> Self {
+        self.related_rules = rules;
+        self
+    }
+
+    pub fn with_used_by_agents(mut self, agents: Vec<String>) -> Self {
+        self.used_by_agents = agents;
+        self
+    }
+
+    pub fn with_applicable_modules(mut self, modules: Vec<String>) -> Self {
+        self.applicable_modules = modules;
+        self
+    }
+
+    pub fn with_constraints(mut self, constraints: Vec<String>) -> Self {
+        self.constraints = constraints;
+        self
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.related_rules.is_empty()
+            && self.used_by_agents.is_empty()
+            && self.applicable_modules.is_empty()
+            && self.constraints.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct AgentContext {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub skills: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub applicable_modules: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub constraints: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub domain_id: Option<String>,
+}
+
+impl AgentContext {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_skills(mut self, skills: Vec<String>) -> Self {
+        self.skills = skills;
+        self
+    }
+
+    pub fn with_applicable_modules(mut self, modules: Vec<String>) -> Self {
+        self.applicable_modules = modules;
+        self
+    }
+
+    pub fn with_constraints(mut self, constraints: Vec<String>) -> Self {
+        self.constraints = constraints;
+        self
+    }
+
+    pub fn with_domain(mut self, domain_id: impl Into<String>) -> Self {
+        self.domain_id = Some(domain_id.into());
+        self
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.skills.is_empty()
+            && self.applicable_modules.is_empty()
+            && self.constraints.is_empty()
+            && self.domain_id.is_none()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct TrackedFile {
     pub path: String,
@@ -192,6 +282,10 @@ pub struct ProjectManifest {
     pub groups: HashMap<String, GroupContext>,
     #[serde(default, skip_serializing_if = "HashMap::is_empty")]
     pub domains: HashMap<String, DomainContext>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub skill_contexts: HashMap<String, SkillContext>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub agent_contexts: HashMap<String, AgentContext>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub tracked: Vec<TrackedFile>,
 }
@@ -209,6 +303,8 @@ impl ProjectManifest {
             modules: HashMap::new(),
             groups: HashMap::new(),
             domains: HashMap::new(),
+            skill_contexts: HashMap::new(),
+            agent_contexts: HashMap::new(),
             tracked: Vec::new(),
         }
     }
@@ -248,6 +344,16 @@ impl ProjectManifest {
         self
     }
 
+    pub fn with_skill_contexts(mut self, contexts: HashMap<String, SkillContext>) -> Self {
+        self.skill_contexts = contexts;
+        self
+    }
+
+    pub fn with_agent_contexts(mut self, contexts: HashMap<String, AgentContext>) -> Self {
+        self.agent_contexts = contexts;
+        self
+    }
+
     pub fn with_tracked(mut self, tracked: Vec<TrackedFile>) -> Self {
         self.tracked = tracked;
         self
@@ -263,6 +369,14 @@ impl ProjectManifest {
 
     pub fn get_domain_context(&self, domain_id: &str) -> Option<&DomainContext> {
         self.domains.get(domain_id)
+    }
+
+    pub fn get_skill_context(&self, skill_name: &str) -> Option<&SkillContext> {
+        self.skill_contexts.get(skill_name)
+    }
+
+    pub fn get_agent_context(&self, agent_name: &str) -> Option<&AgentContext> {
+        self.agent_contexts.get(agent_name)
     }
 
     pub fn to_json(&self) -> Result<String, serde_json::Error> {
