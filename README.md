@@ -1,20 +1,16 @@
-# modmap
+# modmap lakehouse
+
+**FORK, DONT USE**
 
 **Universal Module Map Schema for Codebase Structure Representation**
 
-[![CI](https://github.com/junyeong-ai/modmap/actions/workflows/ci.yml/badge.svg)](https://github.com/junyeong-ai/modmap/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/modmap.svg)](https://crates.io/crates/modmap)
-[![Docs.rs](https://img.shields.io/docsrs/modmap)](https://docs.rs/modmap)
-[![Rust](https://img.shields.io/badge/rust-1.92%2B-orange.svg)](https://www.rust-lang.org)
-[![License](https://img.shields.io/crates/l/modmap.svg)](LICENSE)
-
-English | [한국어](README.ko.md)
+English
 
 ---
 
 ## Overview
 
-`modmap` is a language-agnostic schema library for representing codebase structure. It provides standardized types for:
+`modmap-lh` is a language-agnostic schema library for representing codebase structure. It provides standardized types for:
 
 1. **Codebase Analysis**: Modules, dependencies, conventions, known issues
 2. **Plugin System**: Agents, rules, skills for Claude Code plugins
@@ -25,7 +21,7 @@ English | [한국어](README.ko.md)
 
 ```toml
 [dependencies]
-modmap = "1.1"
+modmap-lh = "1.1"
 ```
 
 ---
@@ -49,7 +45,7 @@ modmap = "1.1"
 ### Creating a Module Map
 
 ```rust
-use modmap::{
+use modmap-lh lakehouse::{
     GeneratorInfo, ModuleMap, ProjectMetadata,
     TechStack, Module, ModuleMetrics, ModuleDependency,
 };
@@ -79,7 +75,7 @@ let json = map.to_json()?;
 ### Loading with Manifest
 
 ```rust
-use modmap::SchemaRegistry;
+use modmap-lh::SchemaRegistry;
 
 let registry = SchemaRegistry::new();
 let manifest = registry.load(&json_string)?;
@@ -94,7 +90,7 @@ println!("Project: {}", manifest.project.project.name);
 ### Agent
 
 ```rust
-use modmap::{Agent, AgentModel, AgentColor};
+use modmap-lh::{Agent, AgentModel, AgentColor};
 
 let agent = Agent::new(
     "code-reviewer",
@@ -109,7 +105,7 @@ let agent = Agent::new(
 ### Rule
 
 ```rust
-use modmap::{Rule, RuleCategory};
+use modmap-lh::{Rule, RuleCategory};
 
 let rule = Rule::new(
     "rust-conventions",
@@ -133,7 +129,7 @@ let rule = Rule::new(
 ### Skill
 
 ```rust
-use modmap::{Skill, SkillFile};
+use modmap-lh::{Skill, SkillFile};
 
 let skill = Skill::new(
     "deploy",
@@ -151,7 +147,7 @@ let skill = Skill::new(
 `ProjectManifest` wraps `ModuleMap` with additional metadata:
 
 ```rust
-use modmap::{ProjectManifest, ModuleContext};
+use modmap-lh::{ProjectManifest, ModuleContext};
 use std::collections::HashMap;
 
 let manifest = ProjectManifest::new(module_map)
@@ -178,7 +174,7 @@ ModuleDependency::optional("cache")      // Optional dependency
 ### Convention & Known Issue
 
 ```rust
-use modmap::{Convention, KnownIssue, IssueSeverity, IssueCategory};
+use modmap-lh::{Convention, KnownIssue, IssueSeverity, IssueCategory};
 
 let convention = Convention::new("error-handling", "Use ? operator")
     .with_rationale("Rust idiom");
@@ -194,7 +190,7 @@ let issue = KnownIssue::new(
 ### Tech Stack
 
 ```rust
-use modmap::{TechStack, FrameworkInfo};
+use modmap-lh::{TechStack, FrameworkInfo};
 
 let stack = TechStack::new("rust")
     .with_version("1.92")
@@ -209,7 +205,7 @@ let stack = TechStack::new("rust")
 Schema uses [SemVer](https://semver.org/). Major version must match:
 
 ```rust
-use modmap::{SchemaRegistry, SchemaError};
+use modmap-lh::{SchemaRegistry, SchemaError};
 
 let registry = SchemaRegistry::new();
 match registry.load(&json) {
