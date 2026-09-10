@@ -14,7 +14,7 @@ cargo fmt            # Format
 
 ## Overview
 
-`modmap` - Universal module map schema for codebase structure representation.
+`modmap-lh` - Universal module map schema for codebase structure representation.
 
 Two primary use cases:
 1. **Codebase Analysis**: Language-agnostic schema for representing module structure
