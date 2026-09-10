@@ -1,11 +1,11 @@
 [package]
-name = "modmap"
-version = "1.1.0"
+name = "modmap-lh"
+version = "1.0.0"
 edition = "2024"
 rust-version = "1.92.0"
 description = "Universal module map schema for codebase structure representation"
 license = "MIT"
-repository = "https://github.com/junyeong-ai/modmap"
+repository = "https://github.com/michaelbomholt665/modmap-lakehouse"
 keywords = ["schema", "module-map", "codebase-analysis", "multi-agent"]
 categories = ["data-structures", "development-tools"]
 
